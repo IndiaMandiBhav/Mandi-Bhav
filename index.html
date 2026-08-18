@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ankit All India Live Mandi Bhav</title>
+<script>
+/* GitHub deployment configuration.
+   After deploying the Cloudflare Worker, put its /api URL here. */
+window.MANDI_API_URL = "https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070";
+window.MANDI_API_KEY = "579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b";
+</script>
+</head>
+<body>
+<style>
+#ankitMandiApp{--g:#0b6b2f;--g2:#168a43;--o:#f07818;--r:#d92d3f;--bg:#f3f7f4;--text:#18222b;--muted:#64748b;--bd:#e2e8f0;font-family:Arial,"Noto Sans Devanagari",sans-serif;background:var(--bg);color:var(--text);padding:9px;border-radius:14px}
+#ankitMandiApp *{box-sizing:border-box}
+#ankitMandiApp .top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
+#ankitMandiApp .brand{font-weight:900;color:var(--g);font-size:18px}
+#ankitMandiApp .lang{display:flex;background:#fff;border:1px solid var(--bd);padding:3px;border-radius:999px}
+#ankitMandiApp .lang button{border:0;background:transparent;color:var(--muted);font-weight:800;padding:7px 12px;border-radius:999px;cursor:pointer}
+#ankitMandiApp .lang button.active{background:var(--g);color:#fff}
+#ankitMandiApp .ticker{height:40px;background:#111820;color:#fff;border-radius:11px;display:flex;align-items:center;overflow:hidden;margin-bottom:11px}
+#ankitMandiApp .live{background:#df1735;padding:6px 9px;margin-left:6px;border-radius:7px;font-size:11px;font-weight:900;z-index:2;white-space:nowrap}
+#ankitMandiApp .tw{overflow:hidden;white-space:nowrap;flex:1}
+#ankitMandiApp .tt{display:inline-block;padding-left:100%;animation:akTicker 30s linear infinite;font-size:13px}
+@keyframes akTicker{to{transform:translateX(-100%)}}
+#ankitMandiApp .hero{background:linear-gradient(135deg,#075425,#24944d);color:#fff;border-radius:16px;padding:23px 13px;text-align:center;margin-bottom:12px}
+#ankitMandiApp .hero h1{font-size:clamp(21px,4vw,31px);margin:0}
+#ankitMandiApp .hero p{font-size:13px;margin:7px 0 0;opacity:.94}
+#ankitMandiApp .panel{background:#fff;border:1px solid var(--bd);border-radius:15px;padding:13px;margin-bottom:12px;box-shadow:0 7px 22px rgba(15,23,42,.06)}
+#ankitMandiApp .filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;align-items:end}
+#ankitMandiApp .field{display:flex;flex-direction:column;gap:5px}
+#ankitMandiApp .field label{font-size:12px;font-weight:900;color:#334155}
+#ankitMandiApp select,#ankitMandiApp input[type=date]{height:42px;width:100%;border:1px solid #d7e0e7;background:#f8fafc;border-radius:9px;padding:0 10px;font-size:14px;outline:0}
+#ankitMandiApp select:focus,#ankitMandiApp input[type=date]:focus{border-color:var(--g2);box-shadow:0 0 0 3px #168a431a}
+#ankitMandiApp .reset,#ankitMandiApp .more{height:42px;border:0;border-radius:9px;font-weight:900;cursor:pointer}
+#ankitMandiApp .reset{background:#e8eef2;color:#26323c}
+#ankitMandiApp .more{background:var(--g);color:#fff;padding:0 22px;display:block;margin:17px auto 5px}
+#ankitMandiApp .section{display:flex;justify-content:space-between;align-items:center;gap:9px;margin-bottom:8px}
+#ankitMandiApp .section h2{font-size:18px;color:var(--g);margin:0}
+#ankitMandiApp .trending{display:inline-flex;align-items:center;gap:7px;padding:7px 11px;border-radius:999px;border:1px solid #ffd27e;background:#fff0c9;color:#a95500;font-weight:900;font-size:12px}
+#ankitMandiApp .dot{width:8px;height:8px;border-radius:50%;background:#ff7a00;box-shadow:0 0 0 4px #ff7a0022}
+#ankitMandiApp .chart{height:260px;position:relative}
+#ankitMandiApp .summary{font-size:12px;color:var(--muted);margin-bottom:7px}
+#ankitMandiApp .status{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:13px;margin:5px 2px 11px}
+#ankitMandiApp .pill{padding:6px 9px;border-radius:999px;background:#eaf8ef;color:var(--g);font-weight:800}
+#ankitMandiApp .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+#ankitMandiApp .card{background:#fff;border:1px solid var(--bd);border-radius:13px;overflow:hidden;box-shadow:0 4px 14px #0f172a0d}
+#ankitMandiApp .head{display:flex;justify-content:space-between;gap:7px;align-items:center;padding:10px 12px;background:#f8fafc;border-bottom:1px solid var(--bd)}
+#ankitMandiApp .market{font-weight:900;color:var(--g);font-size:14px}
+#ankitMandiApp .loc{font-size:10px;background:#e8eef3;color:#475569;padding:4px 6px;border-radius:999px;text-align:right}
+#ankitMandiApp .body{padding:12px}
+#ankitMandiApp .cropRow{display:flex;justify-content:space-between;align-items:center;gap:7px;margin-bottom:8px}
+#ankitMandiApp .crop{font-weight:900;color:#176b32;font-size:14px}
+#ankitMandiApp .trend{display:inline-flex;align-items:center;gap:3px;padding:5px 7px;border-radius:7px;font-size:10px;font-weight:900;white-space:nowrap}
+#ankitMandiApp .up{background:#e8f8ee;color:#087a39}.down{background:#ffedf0;color:#c51f35}.flat{background:#f1f5f9;color:#64748b}
+#ankitMandiApp .arrow{font-size:14px}
+#ankitMandiApp .detail{font-size:10px;color:#596879;background:#f3f9f4;border-left:3px solid var(--g);border-radius:7px;padding:6px 7px;margin-bottom:9px}
+#ankitMandiApp .prices{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:#f8fafc;border-radius:8px;padding:7px;text-align:center}
+#ankitMandiApp .pl{display:block;font-size:9px;color:#64748b;font-weight:700}.pv{font-size:13px;font-weight:900}.modal .pv{color:var(--o)}
+#ankitMandiApp .foot{display:flex;justify-content:space-between;padding:7px 12px;background:#fbfcfd;border-top:1px solid var(--bd);font-size:9px;color:#64748b}
+#ankitMandiApp .empty{grid-column:1/-1;background:#fff;border:1px dashed #cbd5e1;border-radius:13px;padding:32px 14px;text-align:center;color:#64748b}
+#ankitMandiApp .spin{width:18px;height:18px;border:3px solid #dcefe2;border-top-color:var(--g);border-radius:50%;display:inline-block;animation:akSpin .8s linear infinite;vertical-align:middle}
+@keyframes akSpin{to{transform:rotate(360deg)}}
+@media(max-width:600px){#ankitMandiApp{padding:6px}#ankitMandiApp .top{align-items:flex-start}#ankitMandiApp .brand{font-size:15px}#ankitMandiApp .hero{padding:19px 10px}#ankitMandiApp .panel{padding:10px}#ankitMandiApp .chart{height:220px}#ankitMandiApp .status{flex-direction:column;align-items:flex-start}#ankitMandiApp .cards{grid-template-columns:1fr}}
+</style>
+
+<div id="ankitMandiApp">
+  <div class="top">
+    <div class="brand">🌾 <span id="akBrand">अंकित मंडी भाव</span></div>
+    <div class="lang"><button id="akHi" class="active">हिंदी</button><button id="akEn">English</button></div>
+  </div>
+  <div class="ticker"><span class="live">● LIVE</span><div class="tw"><div id="akTicker" class="tt"></div></div></div>
+  <div class="hero"><h1 id="akTitle">अंकित ऑल इंडिया लाइव मंडी भाव Portal</h1><p id="akSub">data.gov.in से प्राप्त सरकारी मंडी मूल्य</p></div>
+
+  <div class="panel">
+    <div class="filters">
+      <div class="field"><label id="lState">1. राज्य (State)</label><select id="akState"></select></div>
+      <div class="field"><label id="lDistrict">2. जिला (District)</label><select id="akDistrict" disabled></select></div>
+      <div class="field"><label id="lMarket">3. मंडी (Market)</label><select id="akMarket" disabled></select></div>
+      <div class="field"><label id="lCommodity">4. फसल (Commodity)</label><select id="akCommodity"></select></div>
+      <div class="field"><label id="lDate">5. दिनांक (Date)</label><input type="date" id="akDate"></div>
+      <div class="field"><button id="akReset" class="reset">↻ Reset</button></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="section"><h2 id="akTrendTitle">📈 भाव का ट्रेंड</h2><span class="trending"><span class="dot"></span>TRENDING</span></div>
+    <div id="akSummary" class="summary"></div>
+    <div class="chart"><canvas id="akChart"></canvas></div>
+  </div>
+
+  <div class="status"><div><span id="akResults">प्रदर्शित परिणाम</span>: <b id="akCount">0</b></div><div id="akStatus" class="pill">Loading...</div></div>
+  <div id="akCards" class="cards"></div>
+  <button id="akMore" class="more" style="display:none">और देखें</button>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ====== ONLY CHANGE THIS LINE AFTER DEPLOYING CLOUDFLARE WORKER ====== */
+var WORKER_URL=(window.MANDI_API_URL||"").replace(/\/+$/,"");
+/* ===================================================================== */
+
+var LANG="hi",DATA=[],FILTERED=[],VISIBLE=40,CHART=null,CACHE={};
+var TX={
+hi:{brand:"अंकित मंडी भाव",title:"अंकित ऑल इंडिया लाइव मंडी भाव Portal",sub:"data.gov.in से प्राप्त सरकारी मंडी मूल्य",
+state:"1. राज्य (State)",district:"2. जिला (District)",market:"3. मंडी (Market)",commodity:"4. फसल (Commodity)",date:"5. दिनांक (Date)",
+reset:"↻ Reset",trend:"📈 भाव का ट्रेंड",results:"प्रदर्शित परिणाम",more:"और देखें",allStates:"सभी राज्य (All India)",allDistricts:"सभी जिले",allMarkets:"सभी मंडियां",allCommodities:"सभी फसलें",
+chooseState:"पहले राज्य चुनें",chooseDistrict:"पहले जिला चुनें",min:"न्यूनतम",modal:"मॉडल भाव",max:"अधिकतम",per:"प्रति क्विंटल",up:"तेजी",down:"मंदी",flat:"स्थिर",live:"सरकारी LIVE डेटा",loading:"API से सरकारी डेटा लोड हो रहा है…",error:"API डेटा लोड नहीं हो सका",nodata:"इस चयन के लिए कोई डेटा नहीं मिला",nodatasub:"दूसरी तारीख, फसल या मंडी चुनकर देखें",trendtext:"चयनित डेटा का औसत भाव ट्रेंड"},
+en:{brand:"Ankit Mandi Bhav",title:"Ankit All India Live Mandi Bhav Portal",sub:"Official mandi prices from data.gov.in",
+state:"1. State",district:"2. District",market:"3. Market",commodity:"4. Commodity",date:"5. Date",reset:"↻ Reset",trend:"📈 Price Trend",results:"Results shown",more:"Load More",
+allStates:"All India",allDistricts:"All Districts",allMarkets:"All Markets",allCommodities:"All Commodities",chooseState:"Select state first",chooseDistrict:"Select district first",
+min:"Minimum",modal:"Modal",max:"Maximum",per:"Per Quintal",up:"UP",down:"DOWN",flat:"FLAT",live:"Official LIVE data",loading:"Loading official data…",error:"API data could not be loaded",nodata:"No data found for this selection",nodatasub:"Try another date, crop or market",trendtext:"Average price trend"}};
+function t(k){return TX[LANG][k]||k}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(m){return({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[m]})}
+function uniq(a){return Array.from(new Set(a))}
+function money(n){return "₹"+Number(n||0).toLocaleString("en-IN")}
+function apiDate(iso){if(!iso)return "";var p=iso.split("-");return p[2]+"/"+p[1]+"/"+p[0]}
+function setStatus(s,ok){var e=document.getElementById("akStatus");e.textContent=s;e.style.background=ok?"#eaf8ef":"#ffedf0";e.style.color=ok?"#0b6b2f":"#c51f35"}
+
+function setLang(x){
+ LANG=x;document.getElementById("akHi").className=x==="hi"?"active":"";document.getElementById("akEn").className=x==="en"?"active":"";
+ document.getElementById("akBrand").textContent=t("brand");document.getElementById("akTitle").textContent=t("title");document.getElementById("akSub").textContent=t("sub");
+ document.getElementById("lState").textContent=t("state");document.getElementById("lDistrict").textContent=t("district");document.getElementById("lMarket").textContent=t("market");document.getElementById("lCommodity").textContent=t("commodity");document.getElementById("lDate").textContent=t("date");document.getElementById("akReset").textContent=t("reset");document.getElementById("akTrendTitle").textContent=t("trend");document.getElementById("akResults").textContent=t("results");document.getElementById("akMore").textContent=t("more");
+ document.getElementById("akTicker").textContent=x==="hi"?"🔴 सरकारी LIVE मंडी डेटा • गेहूँ • सोयाबीन • चना • सरसों • प्याज • आलू • वास्तविक उपलब्ध रिकॉर्ड":"🔴 OFFICIAL LIVE MANDI DATA • Wheat • Soyabean • Gram • Mustard • Onion • Potato • Official records";
+ renderCards();drawChart();
+}
+
+function getUrl(params){
+ var u=WORKER_URL.replace(/\/+$/,"")+"?";
+ var a=[];for(var k in params)if(params[k]!==""&&params[k]!=null)a.push(encodeURIComponent(k)+"="+encodeURIComponent(params[k]));
+ return u+a.join("&");
+}
+async function api(params){
+ var a=[];
+ params=params||{};
+ params["api-key"]=window.MANDI_API_KEY;
+ params["format"]="json";
+ for(var k in params) if(params[k]!==""&&params[k]!=null)
+   a.push(encodeURIComponent(k)+"="+encodeURIComponent(params[k]));
+ var r=await fetch(window.MANDI_API_URL+"?"+a.join("&"),{headers:{"Accept":"application/json"}});
+ if(!r.ok)throw new Error("HTTP "+r.status);
+ var j=await r.json();
+ if(j.error)throw new Error(j.error);
+ return j;
+}
+function norm(x){return{state:x.state||"",district:x.district||"",market:x.market||"",commodity:x.commodity||"",variety:x.variety||"",grade:x.grade||"",arrival_date:x.arrival_date||"",min_price:+x.min_price||0,max_price:+x.max_price||0,modal_price:+x.modal_price||0}}
+async function getDateData(iso){
+ var key=iso||"CURRENT";if(CACHE[key])return CACHE[key];
+ var rows=[],offset=0;
+ for(var i=0;i<20;i++){
+   var j=await api({arrival_date:apiDate(iso),offset:offset,limit:1000});
+   var rec=(j.records||[]).map(norm);rows=rows.concat(rec);
+   if(rec.length<1000)break;offset+=1000;
+ }
+ CACHE[key]=rows;return rows;
+}
+function build(){
+ var s=document.getElementById("akState"),c=document.getElementById("akCommodity"),os=s.value,oc=c.value;
+ s.innerHTML='<option value="">'+esc(t("allStates"))+'</option>';
+ uniq(DATA.map(x=>x.state)).filter(Boolean).sort().forEach(x=>s.innerHTML+='<option value="'+esc(x)+'">'+esc(x)+'</option>');
+ c.innerHTML='<option value="">'+esc(t("allCommodities"))+'</option>';
+ uniq(DATA.map(x=>x.commodity)).filter(Boolean).sort().forEach(x=>c.innerHTML+='<option value="'+esc(x)+'">'+esc(x)+'</option>');
+ if(os)s.value=os;if(oc)c.value=oc;districts();
+}
+function districts(){
+ var s=document.getElementById("akState"),d=document.getElementById("akDistrict"),m=document.getElementById("akMarket"),old=d.value;
+ var rows=s.value?DATA.filter(x=>x.state===s.value):[];
+ d.innerHTML='<option value="">'+esc(s.value?t("allDistricts"):t("chooseState"))+'</option>';
+ uniq(rows.map(x=>x.district)).filter(Boolean).sort().forEach(x=>d.innerHTML+='<option value="'+esc(x)+'">'+esc(x)+'</option>');
+ d.disabled=!s.value;if(old)d.value=old;markets();
+}
+function markets(){
+ var s=document.getElementById("akState").value,d=document.getElementById("akDistrict"),m=document.getElementById("akMarket"),old=m.value;
+ var rows=DATA.filter(x=>(!s||x.state===s)&&(!d.value||x.district===d.value));
+ m.innerHTML='<option value="">'+esc(d.value?t("allMarkets"):t("chooseDistrict"))+'</option>';
+ uniq(rows.map(x=>x.market)).filter(Boolean).sort().forEach(x=>m.innerHTML+='<option value="'+esc(x)+'">'+esc(x)+'</option>');
+ m.disabled=!d.value;if(old)m.value=old;
+}
+function apply(){
+ VISIBLE=40;var s=document.getElementById("akState").value,d=document.getElementById("akDistrict").value,m=document.getElementById("akMarket").value,c=document.getElementById("akCommodity").value;
+ FILTERED=DATA.filter(x=>(!s||x.state===s)&&(!d||x.district===d)&&(!m||x.market===m)&&(!c||x.commodity===c));renderCards();drawChart();loadTrendArrows();
+}
+function trendHTML(x){
+ if(x.delta==null)return '<span class="trend flat"><span class="arrow">→</span>'+t("flat")+'</span>';
+ if(x.delta>0)return '<span class="trend up"><span class="arrow">▲</span>'+t("up")+' '+money(x.delta)+'</span>';
+ if(x.delta<0)return '<span class="trend down"><span class="arrow">▼</span>'+t("down")+' '+money(Math.abs(x.delta))+'</span>';
+ return '<span class="trend flat"><span class="arrow">→</span>'+t("flat")+'</span>';
+}
+function renderCards(){
+ var g=document.getElementById("akCards"),c=document.getElementById("akCount");c.textContent=FILTERED.length.toLocaleString("en-IN");
+ if(!FILTERED.length){g.innerHTML='<div class="empty"><b>'+esc(t("nodata"))+'</b><br>'+esc(t("nodatasub"))+'</div>';document.getElementById("akMore").style.display="none";return}
+ var out="",arr=FILTERED.slice(0,VISIBLE);
+ arr.forEach(function(x){out+='<div class="card"><div class="head"><span class="market">'+esc(x.market)+'</span><span class="loc">'+esc(x.district)+', '+esc(x.state)+'</span></div><div class="body"><div class="cropRow"><span class="crop">🌾 '+esc(x.commodity)+'</span>'+trendHTML(x)+'</div><div class="detail">Variety: '+esc(x.variety||"-")+' • Grade: '+esc(x.grade||"-")+'</div><div class="prices"><div><span class="pl">'+t("min")+'</span><span class="pv">'+money(x.min_price)+'</span></div><div class="modal"><span class="pl">'+t("modal")+'</span><span class="pv">'+money(x.modal_price)+'</span></div><div><span class="pl">'+t("max")+'</span><span class="pv">'+money(x.max_price)+'</span></div></div></div><div class="foot"><span>'+t("per")+'</span><span>📅 '+esc(x.arrival_date)+'</span></div></div>'});
+ g.innerHTML=out;document.getElementById("akMore").style.display=FILTERED.length>VISIBLE?"block":"none";
+}
+function drawChart(){
+ if(typeof Chart==="undefined")return;
+ var map={},labels=[],vals=[],ctx=document.getElementById("akChart").getContext("2d");
+ FILTERED.forEach(function(x){if(!map[x.arrival_date])map[x.arrival_date]={t:0,c:0};map[x.arrival_date].t+=x.modal_price;map[x.arrival_date].c++});
+ labels=Object.keys(map).sort();vals=labels.map(function(d){return Math.round(map[d].t/map[d].c)});
+ if(CHART)CHART.destroy();
+ CHART=new Chart(ctx,{type:"line",data:{labels:labels,datasets:[{label:t("modal"),data:vals,borderColor:"#0b6b2f",backgroundColor:"rgba(11,107,47,.10)",borderWidth:3,pointRadius:labels.length>20?2:4,pointBackgroundColor:"#f07818",fill:true,tension:.25}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true}},scales:{x:{title:{display:true,text:"Date"}},y:{title:{display:true,text:"₹"}}}}});
+ document.getElementById("akSummary").textContent=t("trend")+" • "+FILTERED.length.toLocaleString("en-IN")+" records";
+}
+async function loadTrendArrows(){
+ var iso=document.getElementById("akDate").value;if(!iso){FILTERED.forEach(x=>x.delta=null);renderCards();return}
+ var d=new Date(iso+"T00:00:00");d.setDate(d.getDate()-1);var prev=d.toISOString().slice(0,10);
+ try{
+   var old=await getDateData(prev),mp={};
+   old.forEach(x=>mp[[x.state,x.district,x.market,x.commodity,x.variety,x.grade].join("|")]=x.modal_price);
+   FILTERED.forEach(x=>{var p=mp[[x.state,x.district,x.market,x.commodity,x.variety,x.grade].join("|")];x.delta=p==null?null:x.modal_price-p});
+ }catch(e){FILTERED.forEach(x=>x.delta=null)}
+ renderCards();
+}
+async function loadSelected(){
+ var iso=document.getElementById("akDate").value;setStatus(t("loading"),true);document.getElementById("akCards").innerHTML='<div class="empty"><span class="spin"></span><br><br>'+esc(t("loading"))+'</div>';
+ try{DATA=await getDateData(iso);build();apply();setStatus("🟢 "+t("live")+" • "+DATA.length.toLocaleString("en-IN")+" records",true)}catch(e){DATA=[];FILTERED=[];renderCards();setStatus(t("error")+" • "+e.message,false)}
+}
+document.getElementById("akHi").onclick=function(){setLang("hi")};document.getElementById("akEn").onclick=function(){setLang("en")};
+document.getElementById("akState").onchange=function(){document.getElementById("akDistrict").value="";document.getElementById("akMarket").value="";districts();apply()};
+document.getElementById("akDistrict").onchange=function(){document.getElementById("akMarket").value="";markets();apply()};
+document.getElementById("akMarket").onchange=apply;document.getElementById("akCommodity").onchange=apply;
+document.getElementById("akDate").onchange=function(){loadSelected()};
+document.getElementById("akMore").onclick=function(){VISIBLE+=40;renderCards()};
+document.getElementById("akReset").onclick=function(){document.getElementById("akState").value="";document.getElementById("akDistrict").value="";document.getElementById("akMarket").value="";document.getElementById("akCommodity").value="";document.getElementById("akDate").value="";CACHE={};loadSelected()};
+
+setLang("hi");document.getElementById("akDate").value=new Date().toISOString().slice(0,10);loadSelected();
+})();
+</script>
+
+</body></html>
